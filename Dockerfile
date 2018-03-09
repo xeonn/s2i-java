@@ -19,10 +19,10 @@ RUN INSTALL_PKGS="tar unzip bc which lsof " && \
     mkdir -p /opt/app-root/source && chmod -R a+rwX /opt/app-root/source && \
     mkdir -p /opt/s2i/destination && chmod -R a+rwX /opt/s2i/destination && \
     mkdir -p /opt/app-root/src && chmod -R a+rwX /opt/app-root/src && \
-    yum localinstall -y jdk-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.rpm && \
     wget --no-cookies --no-check-certificate \
     --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjre8-downloads-2133155.html; oraclelicense=accept-securebackup-cookie" \
   "http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/${JAVA_URL_HASH}/jdk-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.rpm" && \
+    yum localinstall -y jdk-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.rpm && \
     rm -f jdk-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.rpm && \
     yum clean all -y 
 
@@ -54,10 +54,10 @@ LABEL io.k8s.description="Platform for building Java (fatjar) applications with 
 # COPY Additional files,configurations that we want to ship by default, like a default setting.xml
 COPY ./contrib/settings.xml $HOME/.m2/
 
-LABEL io.openshift.s2i.scripts-url=image:///usr/local/sti
-COPY ./sti/bin/ /usr/local/sti
+LABEL io.openshift.s2i.scripts-url=image:///usr/libexec/s2i
+COPY ./s2i/bin/ /usr/libexec/s2i
 
-RUN chown -R 1001:1001 /opt/openshift
+RUN chown -R 1001:1001 /opt/app-root
 
 # This default user is created in the openshift/base-centos7 image
 USER 1001
@@ -67,4 +67,4 @@ EXPOSE 8080
 
 # Set the default CMD for the image
 # CMD ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/opt/openshift/app.jar"]
-CMD ["usage"]
+# CMD ["/usr/libexec/s2i/usage"]

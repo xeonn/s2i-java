@@ -8,8 +8,8 @@ LOCAL_SOURCE_DIR=${HOME}/source
 mkdir -p $LOCAL_SOURCE_DIR
 # TODO: Verify a $HOME is set
 
-# Resulting artifact files will be deployed to /opt/openshift
-DEPLOY_DIR=/opt/openshift
+# Resulting artifact files will be deployed to /opt/app-root
+DEPLOY_DIR=/opt/app-root
 
 # Copy the source for compilation
 # TODO: Remove. Why do we need to move the source???
