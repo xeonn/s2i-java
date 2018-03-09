@@ -1,18 +1,30 @@
 # s2i-java
 FROM openshift/base-centos7
-MAINTAINER Jorge Morales <jmorales@redhat.com>
+MAINTAINER Onn Khairuddin Rahmat <onn.khairuddin@gmail.com>
+LABEL description="Original maintainer Jorge Morales <jmorales@redhat.com>"
 # HOME in base image is /opt/app-root/src
+
+ENV JAVA_VERSION_MAJOR=8 \
+    JAVA_VERSION_MINOR=161 \
+    JAVA_VERSION_BUILD=12 \
+    JAVA_URL_HASH=2f38c3b165be4555a1fa6e98c45e0808
 
 # Install build tools on top of base image
 # Java jdk 8, Maven 3.3, Gradle 2.6
-RUN INSTALL_PKGS="tar unzip bc which lsof java-1.8.0-openjdk java-1.8.0-openjdk-devel" && \
+RUN INSTALL_PKGS="tar unzip bc which lsof " && \
     yum install -y --enablerepo=centosplus $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
     yum clean all -y && \
     mkdir -p /opt/openshift && \
     mkdir -p /opt/app-root/source && chmod -R a+rwX /opt/app-root/source && \
     mkdir -p /opt/s2i/destination && chmod -R a+rwX /opt/s2i/destination && \
-    mkdir -p /opt/app-root/src && chmod -R a+rwX /opt/app-root/src
+    mkdir -p /opt/app-root/src && chmod -R a+rwX /opt/app-root/src && \
+    yum localinstall -y jdk-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.rpm && \
+    wget --no-cookies --no-check-certificate \
+    --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjre8-downloads-2133155.html; oraclelicense=accept-securebackup-cookie" \
+  "http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/${JAVA_URL_HASH}/jdk-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.rpm" && \
+    rm -f jdk-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.rpm && \
+    yum clean all -y 
 
 ENV MAVEN_VERSION 3.3.9
 RUN (curl -0 http://www.eu.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | \
