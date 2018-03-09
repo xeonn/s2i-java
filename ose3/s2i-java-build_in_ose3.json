@@ -33,7 +33,7 @@
             "source": {
                "type": "Git",
                "git": {
-                  "uri": "https://github.com/jorgemoralespou/s2i-java.git",
+                  "uri": "https://github.com/xeonn/s2i-java.git",
                   "ref": "master"
                }
             },
@@ -77,7 +77,7 @@
                {
                   "name": "latest",
                   "annotations": {
-                     "description": "Java OpenJDK S2I image",
+                     "description": "Java Oracle JDK8 S2I image",
                      "iconClass": "icon-java",
                      "tags": "builder,java,maven,gradle,springboot,vertx,wildfly-swarm,dropwizard,microservices,fatjar",
                      "supports": "java:8,maven:3,gradle:2.6",
